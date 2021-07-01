@@ -167,6 +167,8 @@ public class AdapterService extends Service {
 
     private final ArrayList<DiscoveringPackage> mDiscoveringPackages = new ArrayList<>();
 
+    private static final int TYPE_BREDR = 100;
+
     static {
         classInitNative();
     }
@@ -1086,6 +1088,10 @@ public class AdapterService extends Service {
             BluetoothAdapter.getDefaultAdapter().disableBluetoothGetStateCache();
         }
 
+        // TODO(b/140404592): Either implement these custom methods, or remove them from IBluetooth.
+        @Override
+        public int getDeviceType(BluetoothDevice device) { return TYPE_BREDR; }
+
         public void cleanup() {
             mService = null;
         }
@@ -1594,6 +1600,11 @@ public class AdapterService extends Service {
             enforceBluetoothPermission(service);
 
             return service.getRemoteName(device);
+        }
+
+        @Override
+        public boolean isBroadcastActive() {
+            return false;
         }
 
         @Override
